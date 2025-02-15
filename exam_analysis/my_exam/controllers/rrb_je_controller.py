@@ -3,21 +3,18 @@ import requests
 
 class RRBJEController:
     @staticmethod
-    def fetch_exam_data(url: str):
+    def fetch_exam_data(url: str, category: str, horizontal_category: str,
+                        exam_language: str, rrb_zone: str, rrb_branch: str):
         """
         Function to scrape data from the given URL.
         This function fetches the HTML content of the URL and extracts the required exam data.
         """
         try:
-            # Send the HTTP request to the URL
             response = requests.get(url)
             
-            # Check if the request was successful
             if response.status_code == 200:
-                # Parse the HTML content using BeautifulSoup
                 soup = BeautifulSoup(response.text, "html.parser")
                 
-                # Extract the first table (exam details) - Make sure the table exists
                 table = soup.find('table', {'border': '1'})
                 if table:
                     rows = table.find_all('tr')
@@ -57,25 +54,24 @@ class RRBJEController:
                             correct_answer_value = correct_answer_tag.get_text(strip=True)
                         else:
                             correct_answer_value = None
-                        # Extract just the option number for both the chosen and correct answers
                         correct_answer_number = correct_answer_value.split('.')[0].strip() if correct_answer_value else None
                         
-                            
-                        print(f"Chosen Option: '{chosen_option_number}'")
-                        print(f"Correct Answer: '{correct_answer_number}'")
                         if chosen_option_number == correct_answer_number:
                             correct_count += 1
                         elif chosen_option_number and chosen_option_number != correct_answer_number:  # If the answer was chosen but incorrect
                             wrong_count += 1
                         else:
                             not_attempted_count += 1
+                    marks_per_correct_answer = 1
+                    negative_mark_per_wrong_answer = marks_per_correct_answer / 3
+                    actual_marks = (correct_count * marks_per_correct_answer) - (wrong_count * negative_mark_per_wrong_answer)
                     
-                    # Return the exam data along with right, wrong, and not attempted counts
                     extracted_data = {
                         'exam_data': exam_data,
                         'right_answers': correct_count,
                         'wrong_answers': wrong_count,
-                        'not_attempted': not_attempted_count
+                        'not_attempted': not_attempted_count,
+                        'actual_marks': round(actual_marks, 3)
                     }
                     return extracted_data
                 else:
