@@ -5,7 +5,7 @@ from my_exam.controllers.marking_scheme.sscCGL import SSCCGLMarks
 
 class SSCExamController:
     @staticmethod
-    def fetch_ssc_exam_data(url: str, category: str, horizontal_category: str, exam_language: str):
+    def fetch_ssc_exam_data(url: str, category: str, horizontal_category: str, exam_language: str,exam_type:str):
         try:
             headers = {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
@@ -67,8 +67,7 @@ class SSCExamController:
                         wrong_count += 1  # Wrong answer ❌
                     else:
                         not_attempted_count += 1  # Unattempted ❓
-                section_marks = SSCCGLMarks.calculate_marks(correct_count, wrong_count, not_attempted_count)
-
+                section_marks = SSCCGLMarks.calculate_marks(correct_count, wrong_count, not_attempted_count,exam_type)
 
                 sections.append({
                     "section_name": section_name,
@@ -79,21 +78,31 @@ class SSCExamController:
                     "raw_marks": section_marks
                 })
             total_marks=0
-                    
-            if exam_title.startswith("Combined Graduate Level Examination Tier I"):
+            if exam_type=="ssc_cgl":
                 total_marks = sum(
-                    SSCCGLMarks.calculate_marks(section["correct"], section["wrong"], section["unattempted"]) 
+                    SSCCGLMarks.calculate_marks(section["correct"], section["wrong"], section["unattempted"],exam_type) 
                     for section in sections
                 )
-            elif exam_title.startswith("MTS Non Tech Havaldar"):               
+            if exam_type=="cgl_mains":
+                total_marks = sum(
+                    SSCCGLMarks.calculate_marks(section["correct"], section["wrong"], section["unattempted"],exam_type) 
+                    for section in sections
+                )
+            elif exam_type=="ssc_mts":               
                 sections = [
                     section for section in sections 
                     if section["section_name"] in ["General Awareness", "English Language and Comprehension"]
                 ]
                 total_marks = sum(
-                SSCCGLMarks.calculate_MTS_total_marks(section["correct"], section["wrong"], section["unattempted"]) 
-                for section in sections
-            )
+                    SSCCGLMarks.calculate_marks(section["correct"], section["wrong"], section["unattempted"],exam_type) 
+                    for section in sections
+                )
+            else:
+                total_marks = sum(
+                    SSCCGLMarks.calculate_marks(section["correct"], section["wrong"], section["unattempted"],exam_type) 
+                    for section in sections
+                )
+                
             # ✅ Filter sections to include only English and General Awareness
                 
             total_attempted = sum(section["correct"] + section["wrong"] for section in sections)

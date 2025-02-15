@@ -30,7 +30,7 @@ def scrape_exam_data(request:ScrapeRequest):
     try:
         data = SSCExamController.fetch_ssc_exam_data(
             request.url, request.category, request.Horizontalcategory,
-            request.Exam_Language
+            request.Exam_Language, request.exam_type
         )
         return data
     except Exception as e:
