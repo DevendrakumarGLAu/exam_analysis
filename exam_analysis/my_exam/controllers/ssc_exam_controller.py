@@ -5,7 +5,7 @@ from my_exam.controllers.marking_scheme.sscCGL import SSCCGLMarks
 
 class SSCExamController:
     @staticmethod
-    def fetch_ssc_exam_data(url: str, category: str, horizontal_category: str, exam_language: str,exam_type:str):
+    def fetch_ssc_exam_data(url: str, category: str, horizontal_category: str, exam_language: str, exam_type: str, password: str):
         try:
             headers = {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
@@ -78,7 +78,7 @@ class SSCExamController:
                     "raw_marks": section_marks
                 })
             total_marks=0
-            if exam_type=="ssc_cgl":
+            if exam_type=="ssc-cgl":
                 total_marks = sum(
                     SSCCGLMarks.calculate_marks(section["correct"], section["wrong"], section["unattempted"],exam_type) 
                     for section in sections

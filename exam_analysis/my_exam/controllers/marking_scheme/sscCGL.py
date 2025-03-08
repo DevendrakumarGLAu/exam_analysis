@@ -26,7 +26,7 @@ class SSCCGLMarks:
     def calculate_marks(correct: int, wrong: int, not_attempted: int,exam_type:str):
         # ✅ Define marking scheme for different exam types
         marking_scheme = {
-            "ssc_cgl": {"correct": 2, "wrong": 0.5},  # CGL: +2 for correct, -0.5 for wrong
+            "ssc-cgl": {"correct": 2, "wrong": 0.5},  # CGL: +2 for correct, -0.5 for wrong
             "ssc_mts": {"correct": 3, "wrong": 1},    # MTS: +3 for correct, -1 for wrong
             "ssc_gd": {"correct": 1, "wrong": 0.25},  # SSC GD: +1 for correct, -0.25 for wrong
             "cgl_mains": {"correct": 3, "wrong": 1},  # SSC CGGL MAINS: +3 for correct, -1 for wrong
