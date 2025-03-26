@@ -2,6 +2,7 @@
 from fastapi import APIRouter, HTTPException
 # from controllers.rrb_je_controller import RRBJEController  # Import the controller
 from my_exam.controllers.rrb_je_controller import RRBJEController
+from my_exam.controllers.rrb_constable_controller import RRBConstableController
 from my_exam.controllers.ssc_exam_controller import SSCExamController
 from my_exam.schema import ScrapeRequest 
 
@@ -20,7 +21,18 @@ def scrape_exam_data(request:ScrapeRequest):
         )
         return data
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An error occurred in railway: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"An error occurred in railway je: {str(e)}")
+
+@api_router.post("/rrb-constable-exam-data")
+def scrape_exam_data(request:ScrapeRequest):
+    try:
+        data = RRBConstableController.fetch_exam_data(
+            request.url, request.category, request.Horizontalcategory,
+            request.Exam_Language, request.RRB_zone, request.password, request.exam_type
+        )
+        return data
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"An error occurred in railway constable: {str(e)}")
 
     
 @api_router.post("/ssc-exam-data")
