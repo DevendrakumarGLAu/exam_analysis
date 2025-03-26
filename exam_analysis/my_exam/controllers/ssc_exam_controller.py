@@ -83,7 +83,7 @@ class SSCExamController:
                     SSCCGLMarks.calculate_marks(section["correct"], section["wrong"], section["unattempted"],exam_type) 
                     for section in sections
                 )
-            if exam_type=="cgl_mains":
+            if exam_type=="ssc-cgl-II":
                 total_marks = sum(
                     SSCCGLMarks.calculate_marks(section["correct"], section["wrong"], section["unattempted"],exam_type) 
                     for section in sections
